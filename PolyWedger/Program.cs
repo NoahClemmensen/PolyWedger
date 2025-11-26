@@ -10,7 +10,9 @@ internal abstract class Program
     private static void Main(string[] args)
     {
         const string path = @"C:\Users\noahc\RiderProjects\PolyWedger\Models\Monke.obj";
-        // TODO: Check weather the file exists and is valid file extension and so on.
+        // TODO: Check whether the file exists and is valid file extension and so on.
+        // Get file path from args or user input in future.
+        // Check if .pwdg file given, then deserialize instead of import and translation.
         
         var model = ImportModel(path);
         if (model == null) return;
