@@ -17,7 +17,10 @@ public class Serializer
 
     public static byte[] Serialize(Wedge[] wedges)
     {
-        return [];
+        // This is the method that binds it all together.
+        var byteArray = AllocateByteArray();
+        PopulateByteArray(byteArray, out byte[] result);
+        return result;
     }
     
     private static byte[] AllocateByteArray()
