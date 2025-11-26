@@ -20,6 +20,21 @@ public class Serializer
         return [];
     }
     
+    private static byte[] allocateByteArray()
+    {
+        // Figure out size of array
+        // Size = header size + (number of wedges * byte size of wedge)
+        int example = 37632;
+        
+        return new byte[example];
+    }
+    
+    private static void populateByteArray(byte[] bytes, out byte[] result)
+    {
+        // Fill byte array with data
+        result = bytes;
+    }
+    
     public static void WriteToFile(string path, byte[] data)
     {
         
