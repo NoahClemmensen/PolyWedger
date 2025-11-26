@@ -20,7 +20,7 @@ public class Serializer
         return [];
     }
     
-    private static byte[] allocateByteArray()
+    private static byte[] AllocateByteArray()
     {
         // Figure out size of array
         // Size = header size + (number of wedges * byte size of wedge)
@@ -29,7 +29,7 @@ public class Serializer
         return new byte[example];
     }
     
-    private static void populateByteArray(byte[] bytes, out byte[] result)
+    private static void PopulateByteArray(byte[] bytes, out byte[] result)
     {
         // Fill byte array with data
         result = bytes;
