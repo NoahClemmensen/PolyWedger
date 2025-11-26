@@ -2,7 +2,7 @@
 
 namespace PolyWedger;
 
-public class Serializer
+public static class Serializer
 {
     // This is where we will serialize the wedge data to a file format.
     // Suggested file extensions: .wedge, .bin, .pwdg
