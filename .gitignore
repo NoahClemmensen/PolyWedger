@@ -4,6 +4,10 @@
 /Models
 Models/
 /Models/*
+.idea
+PolyWedger/bin
+PolyWedger/obj
+.idea/
 
 # Created by https://www.toptal.com/developers/gitignore/api/rider,dotnetcore,csharp,dotsettings
 # Edit at https://www.toptal.com/developers/gitignore?templates=rider,dotnetcore,csharp,dotsettings

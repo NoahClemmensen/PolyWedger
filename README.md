@@ -5,7 +5,7 @@ PolyWedger converts 3D models into Roblox-compatible wedge part data. It uses He
 ## Highlights
 - Loads many common 3D formats via HelixToolkit / Assimp.
 - Converts mesh polygons into Roblox wedge part data.
-- Produces a single output file (extension TBD) that you can import into RGE or other tools that accept wedge data.
+- Produces a single output file (file extension to be decided) that you can import into RGE or other tools that accept wedge data.
 
 ## How it works
 1. HelixToolkit loads the model and exposes the mesh geometry.
