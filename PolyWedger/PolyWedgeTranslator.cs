@@ -15,7 +15,41 @@ public static class PolyWedgeTranslator
         }
         return result.ToArray();
     }
-    
+
+    private static Wedge TranslatePolygonToWedge(Geometry3D.Triangle polygon)
+    {
+        // Find center point of triangle
+        var cX = (polygon.P0.X+polygon.P1.X+polygon.P2.X)/3;
+        var cY = (polygon.P0.Y+polygon.P1.Y+polygon.P2.Y)/3;
+        var cZ = (polygon.P0.Z+polygon.P1.Z+polygon.P2.Z)/3;
+        var center = new Vector3(cX, cY, cZ);
+        
+        // Find polygon normal
+        var a = polygon.P1 - polygon.P0;
+        var b = polygon.P2 - polygon.P0;
+        var normal = Vector3.Cross(a, b);
+        normal = Vector3.Normalize(normal);
+        
+        // Decide on reference axis
+        var worldRef = Vector3.UnitY;
+        var d = float.Abs(Vector3.Dot(worldRef, normal));
+        if (d > 0.99f)
+        {
+            worldRef = Vector3.UnitX;
+        }
+        
+        // Wedge rotation:Vector3 is made from normal
+        // Wedge position is just center point
+        // Wedge scale is unknown for now
+
+        return new Wedge()
+        {
+            Pos = Vector3.Zero,
+            Rot = Vector3.Zero,
+            Scale = Vector3.One
+        };
+    }
+
     // Perhaps we can run this as a compute shader and use buffers for faster processing on large models.
     // Okay never mind that, this is already mad fast for what it does.
     // 190ms for 1mio polygons on my PC is good enough, especially when max polys are 400k.

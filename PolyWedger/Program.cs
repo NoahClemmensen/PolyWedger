@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Numerics;
-using HelixToolkit.SharpDX;
 using HelixToolkit.SharpDX.Assimp;
 using HelixToolkit.SharpDX.Model.Scene;
 
