@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 using HelixToolkit.SharpDX.Assimp;
 using HelixToolkit.SharpDX.Model.Scene;
 
@@ -13,7 +14,14 @@ internal abstract class Program
 
     private static void Main(string[] args)
     {
-        TestPolyWedgeTranslator();
+        //TestPolyWedgeTranslator();
+        
+        Vector3 v = new() { X = 1, Y = 0, Z = 0 };
+
+        var q = PolyWedgeTranslator.FromToRotation(Vector3.UnitZ, v);      // quaternion that rotates +Z to the polygon normal
+        var n = PolyWedgeTranslator.ToEulerAngles(q) * (180f / (float)Math.PI); // convert radians to degrees
+
+        Console.WriteLine("Angles: " + n);
     }
 
     private static void TestPolyWedgeTranslator()

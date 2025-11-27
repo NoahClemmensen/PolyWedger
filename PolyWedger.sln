@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolyWedger", "PolyWedger\PolyWedger.csproj", "{D8DFB5C9-C2B5-41C1-8A9D-E05D95CBD82B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGEInterfacerTest", "RGEInterfacerTest\RGEInterfacerTest.csproj", "{28A82568-4433-4EC3-A0F4-ADFBF3A83D69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{D8DFB5C9-C2B5-41C1-8A9D-E05D95CBD82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8DFB5C9-C2B5-41C1-8A9D-E05D95CBD82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8DFB5C9-C2B5-41C1-8A9D-E05D95CBD82B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28A82568-4433-4EC3-A0F4-ADFBF3A83D69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28A82568-4433-4EC3-A0F4-ADFBF3A83D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28A82568-4433-4EC3-A0F4-ADFBF3A83D69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28A82568-4433-4EC3-A0F4-ADFBF3A83D69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
