@@ -5,8 +5,22 @@ namespace PolyWedger;
 
 public static class PolyWedgeTranslator
 {
-    // TODO: Perhaps we can run this as a compute shader and use buffers for faster processing on large models.
-    public static Geometry3D.Triangle[] MakeRightAnglePolys(Geometry3D.Triangle polygon)
+    public static Geometry3D.Triangle[] ProcessModelsPolygons(Geometry3D.Triangle[] polygons)
+    {
+        var result = new List<Geometry3D.Triangle>();
+        foreach (var polygon in polygons)
+        {
+            var bisected = BisectPolygon(polygon);
+            result.AddRange(bisected);
+        }
+        return result.ToArray();
+    }
+    
+    // Perhaps we can run this as a compute shader and use buffers for faster processing on large models.
+    // Okay never mind that, this is already mad fast for what it does.
+    // 190ms for 1mio polygons on my PC is good enough, especially when max polys are 400k.
+    // Though maybe it will be good when we translate the polygons into wedges as well.
+    private static Geometry3D.Triangle[] BisectPolygon(Geometry3D.Triangle polygon)
     {
         // Put vertices into an array for easier indexing
         var pts = new[] { polygon.P0, polygon.P1, polygon.P2 };
