@@ -1,4 +1,6 @@
-﻿using HelixToolkit.SharpDX.Assimp;
+﻿using System.Numerics;
+using HelixToolkit.SharpDX;
+using HelixToolkit.SharpDX.Assimp;
 using HelixToolkit.SharpDX.Model.Scene;
 
 namespace PolyWedger;
@@ -6,15 +8,33 @@ namespace PolyWedger;
 internal abstract class Program
 {
     private static readonly Importer Importer = new();
+    private const string Path = @"C:\Users\noahc\RiderProjects\PolyWedger\Models\Monke.obj";
 
     private static void Main(string[] args)
     {
-        const string path = @"C:\Users\noahc\RiderProjects\PolyWedger\Models\Monke.obj";
+        TestPolyWedgeTranslator();
+    }
+    
+    private static void TestPolyWedgeTranslator()
+    {
+        var triangle = new Geometry3D.Triangle
+        {
+            P0 = new Vector3(2, 0, 0),
+            P1 = new Vector3(1, 0, 0),
+            P2 = new Vector3(0, 0, 2)
+        };
+
+        var result = PolyWedgeTranslator.MakeRightAnglePolys(triangle);
+        Console.WriteLine(result.ToString());
+    }
+
+    private static void CountPolygons()
+    {
         // TODO: Check whether the file exists and is valid file extension and so on.
         // Get file path from args or user input in future.
         // Check if .pwdg file given, then deserialize instead of import and translation.
         
-        var model = ImportModel(path);
+        var model = ImportModel(Path);
         if (model == null) return;
         
         var modelGeometries = ModelGeometryExtractor.GetGeometryFromModel(model);
