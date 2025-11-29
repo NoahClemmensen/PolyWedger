@@ -5,53 +5,65 @@ namespace PolyWedger;
 
 public static class PolyWedgeTranslator
 {
-    public static Geometry3D.Triangle[] ProcessModelsPolygons(Geometry3D.Triangle[] polygons)
+    public static Wedge[] ProcessModelsPolygons(Geometry3D.Triangle[] polygons)
     {
-        List<Geometry3D.Triangle> result = new List<Geometry3D.Triangle>();
+        List<Wedge> result = [];
         foreach (Geometry3D.Triangle polygon in polygons)
         {
             Geometry3D.Triangle[] bisected = BisectPolygon(polygon);
-            result.AddRange(bisected);
+            result.AddRange(bisected.Select(TranslatePolygonToWedge));
         }
 
         return result.ToArray();
     }
 
-    private static Wedge TranslatePolygonToWedge(Geometry3D.Triangle polygon)
+    public static Wedge TranslatePolygonToWedge(Geometry3D.Triangle polygon)
     {
         // Find center point of triangle
-        float cX = (polygon.P0.X + polygon.P1.X + polygon.P2.X) / 3;
-        float cY = (polygon.P0.Y + polygon.P1.Y + polygon.P2.Y) / 3;
-        float cZ = (polygon.P0.Z + polygon.P1.Z + polygon.P2.Z) / 3;
-        Vector3 center = new Vector3(cX, cY, cZ);
+        Vector3 c = new(
+            (polygon.P0.X + polygon.P1.X + polygon.P2.X) / 3f,
+            (polygon.P0.Y + polygon.P1.Y + polygon.P2.Y) / 3f,
+            (polygon.P0.Z + polygon.P1.Z + polygon.P2.Z) / 3f
+        );
 
         // Find polygon normal
         Vector3 a = polygon.P1 - polygon.P0;
         Vector3 b = polygon.P2 - polygon.P0;
-        Vector3 normal = Vector3.Cross(a, b);
-        normal = Vector3.Normalize(normal);
+        Vector3 n = Vector3.Normalize(Vector3.Cross(a, b));
 
         // Wedge rotation:Vector3 is made from normal
-        Vector3 rot = QuaternionUtils.GetNormalizedEulerAngles(normal, Vector3.UnitY);
-        
-        // Wedge position is just center point
-        Vector3 pos = center;
-        
-        // Wedge scale is unknown for now
+        Quaternion q = QuaternionUtils.FromToRotation(Vector3.UnitY, n);
+
+        // Compute scales using helper
+        (float scaleY, float scaleZ) = ComputeLocalScales(polygon, c, Quaternion.Inverse(q));
 
         return new Wedge()
         {
-            Pos = Vector3.Zero,
-            Rot = Vector3.Zero,
-            Scale = Vector3.One
+            Pos = c,
+            Rot = QuaternionUtils.QuaternionToEulerDegrees(q),
+            Scale = new Vector3(0f, scaleY, scaleZ),
         };
+    }
+    
+    public static (float scaleY, float scaleZ) ComputeLocalScales(Geometry3D.Triangle polygon, Vector3 center, Quaternion inverse)
+    {
+        Vector3 lp0 = Vector3.Transform(polygon.P0 - center, inverse);
+        Vector3 lp1 = Vector3.Transform(polygon.P1 - center, inverse);
+        Vector3 lp2 = Vector3.Transform(polygon.P2 - center, inverse);
+
+        float minY = MathF.Min(lp0.Y, MathF.Min(lp1.Y, lp2.Y));
+        float maxY = MathF.Max(lp0.Y, MathF.Max(lp1.Y, lp2.Y));
+        float minZ = MathF.Min(lp0.Z, MathF.Min(lp1.Z, lp2.Z));
+        float maxZ = MathF.Max(lp0.Z, MathF.Max(lp1.Z, lp2.Z));
+
+        return (maxY - minY, maxZ - minZ);
     }
 
     // Perhaps we can run this as a compute shader and use buffers for faster processing on large models.
     // Okay never mind that, this is already mad fast for what it does.
     // 190ms for 1mio polygons on my PC is good enough, especially when max polys are 400k.
     // Though maybe it will be good when we translate the polygons into wedges as well.
-    private static Geometry3D.Triangle[] BisectPolygon(Geometry3D.Triangle polygon)
+    public static Geometry3D.Triangle[] BisectPolygon(Geometry3D.Triangle polygon)
     {
         // Put vertices into an array for easier indexing
         Vector3[] pts = [polygon.P0, polygon.P1, polygon.P2];

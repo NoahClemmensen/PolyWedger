@@ -20,6 +20,12 @@ public static class QuaternionUtils
         Vector3 e = ToEulerAngles(q) * Rad2deg;
         return NormalizeEulerDegrees(e);
     }
+    
+    public static Vector3 QuaternionToEulerDegrees(Quaternion q)
+    {
+        Vector3 e = ToEulerAngles(q) * Rad2deg;
+        return NormalizeEulerDegrees(e);
+    }
 
     public static Quaternion FromToRotation(Vector3 from, Vector3 to)
     {
