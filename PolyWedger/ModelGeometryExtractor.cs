@@ -1,4 +1,5 @@
-﻿using HelixToolkit.SharpDX;
+﻿using HelixToolkit;
+using HelixToolkit.SharpDX;
 using HelixToolkit.SharpDX.Model.Scene;
 
 namespace PolyWedger;
@@ -7,12 +8,12 @@ public static class ModelGeometryExtractor
 {
     public static List<Geometry3D> GetGeometryFromModel(GroupNode group)
     {
-        var geometries = new List<Geometry3D>();
+        List<Geometry3D> geometries = [];
         
-        foreach (var node in group.Items)
+        foreach (SceneNode node in group.Items)
         {
             if (node is not MeshNode mesh) continue; // A mesh is the actual geometry data.
-            var geometry = mesh.Geometry;
+            Geometry3D? geometry = mesh.Geometry;
 
             if (geometry == null)
             {
@@ -28,19 +29,19 @@ public static class ModelGeometryExtractor
 
     public static Geometry3D.Triangle[]? GetPolygonsFromGeometry(Geometry3D geometry)
     {
-        var indices = geometry.Indices;
+        IntCollection? indices = geometry.Indices;
         if (indices == null) return null;
 
-        var positions = geometry.Positions;
+        Vector3Collection? positions = geometry.Positions;
         if (positions == null) return null;
 
-        var polygons = new Geometry3D.Triangle[indices.Count / 3];
+        Geometry3D.Triangle[] polygons = new Geometry3D.Triangle[indices.Count / 3];
 
-        for (var i = 0; i < indices.Count; i += 3)
+        for (int i = 0; i < indices.Count; i += 3)
         {
             // TODO: Figure out what info we need from each polygon. Then make a custom struct and return that instead.
             // This could possibly include positions, rotations(?), idk.
-            var polygon = new Geometry3D.Triangle
+            Geometry3D.Triangle polygon = new Geometry3D.Triangle
             {
                 P0 = positions[indices[i]],
                 P1 = positions[indices[i + 1]],

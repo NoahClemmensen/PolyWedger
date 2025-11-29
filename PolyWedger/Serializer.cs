@@ -14,10 +14,10 @@ public static class Serializer
     private static byte[] Serialize(Wedge[] wedges)
     {
         // Size = header size + (number of wedges * byte size of wedge)
-        var totalSize = HeaderSize + wedges.Length * WedgeByteSize;
+        int totalSize = HeaderSize + wedges.Length * WedgeByteSize;
 
-        using var ms = new MemoryStream(totalSize);
-        using (var bw = new BinaryWriter(ms, Encoding.ASCII, leaveOpen: true))
+        using MemoryStream ms = new MemoryStream(totalSize);
+        using (BinaryWriter bw = new BinaryWriter(ms, Encoding.ASCII, leaveOpen: true))
         {
             // Header stuff
             bw.Write(FileSignature); // 4 bytes
@@ -26,7 +26,7 @@ public static class Serializer
             bw.Write(DateTimeOffset.UtcNow.ToUnixTimeSeconds()); // Timestamp (8 bytes)
             
             // Wedge data
-            foreach (var wedge in wedges)
+            foreach (Wedge wedge in wedges)
             {
                 // Position (3 * 4 bytes)
                 bw.Write(wedge.Pos.X); // 4 bytes
@@ -50,25 +50,25 @@ public static class Serializer
     
     private static Wedge[] Deserialize(byte[] data)
     {
-        using var ms = new MemoryStream(data);
-        using var br = new BinaryReader(ms, Encoding.ASCII, leaveOpen: true);
+        using MemoryStream ms = new MemoryStream(data);
+        using BinaryReader br = new BinaryReader(ms, Encoding.ASCII, leaveOpen: true);
         
         // Read and validate header
-        var signature = br.ReadBytes(4);
+        byte[] signature = br.ReadBytes(4);
         if (!signature.SequenceEqual(FileSignature))
             throw new InvalidDataException("Invalid file signature.");
         
-        var version = br.ReadInt32();
+        int version = br.ReadInt32();
         if (version != 1)
             throw new NotSupportedException($"Unsupported version: {version}");
         
-        var wedgeCount = br.ReadInt32();
-        var timestamp = br.ReadInt64(); // Not used currently
+        int wedgeCount = br.ReadInt32();
+        long timestamp = br.ReadInt64(); // Not used currently
         
-        var wedges = new Wedge[wedgeCount];
-        for (var i = 0; i < wedgeCount; i++)
+        Wedge[] wedges = new Wedge[wedgeCount];
+        for (int i = 0; i < wedgeCount; i++)
         {
-            var wedge = new Wedge
+            Wedge wedge = new Wedge
             {
                 Pos = new System.Numerics.Vector3(br.ReadSingle(), br.ReadSingle(), br.ReadSingle()),
                 Rot = new System.Numerics.Vector3(br.ReadSingle(), br.ReadSingle(), br.ReadSingle()),

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
+using HelixToolkit.SharpDX;
 using HelixToolkit.SharpDX.Assimp;
 using HelixToolkit.SharpDX.Model.Scene;
 
@@ -14,14 +15,33 @@ internal abstract class Program
 
     private static void Main(string[] args)
     {
+        // TestQuaternionUtils();
+        // CountPolygons();
         //TestPolyWedgeTranslator();
+    }
+    
+    private static void TestQuaternionUtils()
+    {
+        (Vector3 v, string note)[] tests =
+        [
+            (new Vector3(0, 1, 0), "target +Y -> expect (0, 0, 0)"),
+            (new Vector3(0, 0, 1), "target +Z -> expect (90, 0, 0)"),
+            (new Vector3(0, -1, 0), "target -Y -> expect equivalent to (180, 0, 0)"),
+            (new Vector3(1, 0, 0), "target +X -> expect (0, 0, -90) or (0,0,270)"),
+            (new Vector3(-1, 0, 0), "target -X -> expect (0, 0, 90)"),
+            (Vector3.Normalize(new Vector3(1, 0, 1)), "diag +X+Z"),
+            (Vector3.Normalize(new Vector3(-1, 0, 1)), "diag -X+Z"),
+            (Vector3.Normalize(new Vector3(0, 1, 1)), "diag +Y+Z (mostly tilt)"),
+            (Vector3.Normalize(new Vector3(0, 1, -1)), "diag +Y-Z"),
+            (Vector3.Normalize(new Vector3(1, 1, 1)), "space diagonal")
+        ];
+
         
-        Vector3 v = new() { X = 1, Y = 0, Z = 0 };
-
-        var q = PolyWedgeTranslator.FromToRotation(Vector3.UnitZ, v);      // quaternion that rotates +Z to the polygon normal
-        var n = PolyWedgeTranslator.ToEulerAngles(q) * (180f / (float)Math.PI); // convert radians to degrees
-
-        Console.WriteLine("Angles: " + n);
+        foreach ((Vector3 v, string note) in tests)
+        {
+            Vector3 e = QuaternionUtils.GetNormalizedEulerAngles(v);
+            Console.WriteLine($"v = {v} -> angles (X,Y,Z) = {e}  // {note}");
+        }
     }
 
     private static void TestPolyWedgeTranslator()
@@ -37,20 +57,20 @@ internal abstract class Program
         // Console.WriteLine(result.ToString());
 
 
-        var model = ImportModel(MioPolyPath);
+        GroupNode? model = ImportModel(MioPolyPath);
         if (model == null) return;
 
-        var modelGeometries = ModelGeometryExtractor.GetGeometryFromModel(model);
+        List<Geometry3D> modelGeometries = ModelGeometryExtractor.GetGeometryFromModel(model);
         if (modelGeometries.Count <= 0) return;
 
-        var polygons = ModelGeometryExtractor.GetPolygonsFromGeometry(modelGeometries[0]);
+        Geometry3D.Triangle[]? polygons = ModelGeometryExtractor.GetPolygonsFromGeometry(modelGeometries[0]);
         if (polygons == null) return;
         Console.WriteLine($"Polygons count before processing: {polygons.Length}");
 
         // Start timing
-        var stopwatch = Stopwatch.StartNew();
+        Stopwatch stopwatch = Stopwatch.StartNew();
 
-        var processedPolygons = PolyWedgeTranslator.ProcessModelsPolygons(polygons!);
+        Geometry3D.Triangle[] processedPolygons = PolyWedgeTranslator.ProcessModelsPolygons(polygons!);
 
         // Stop timing
         stopwatch.Stop();
@@ -58,7 +78,7 @@ internal abstract class Program
         Console.WriteLine($"Processed {processedPolygons.Length} polygons.");
         Console.WriteLine($"Processing took {stopwatch.ElapsedMilliseconds} ms.");
 
-        var diff = processedPolygons.Length - polygons.Length;
+        int diff = processedPolygons.Length - polygons.Length;
         Console.WriteLine($"Polygon count changed by {diff}.");
     }
 
@@ -68,13 +88,13 @@ internal abstract class Program
         // Get file path from args or user input in future.
         // Check if .pwdg file given, then deserialize instead of import and translation.
 
-        var model = ImportModel(Path);
+        GroupNode? model = ImportModel(Path);
         if (model == null) return;
 
-        var modelGeometries = ModelGeometryExtractor.GetGeometryFromModel(model);
+        List<Geometry3D> modelGeometries = ModelGeometryExtractor.GetGeometryFromModel(model);
         if (modelGeometries.Count <= 0) return;
 
-        var polygons = ModelGeometryExtractor.GetPolygonsFromGeometry(modelGeometries[0]);
+        Geometry3D.Triangle[]? polygons = ModelGeometryExtractor.GetPolygonsFromGeometry(modelGeometries[0]);
 
         Console.WriteLine(polygons != null
             ? $"Model has {polygons.Length} polygons."
@@ -83,7 +103,7 @@ internal abstract class Program
 
     private static GroupNode? ImportModel(string filename)
     {
-        var scene = Importer.Load(filename);
+        HelixToolkitScene? scene = Importer.Load(filename);
 
         if (scene != null) return scene.Root.Items.OfType<GroupNode>().FirstOrDefault();
 
