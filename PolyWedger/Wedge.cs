@@ -9,5 +9,4 @@ public struct Wedge
     public Vector3 Pos;
     public Vector3 Rot;
     public Vector3 Scale;
-    // Idk stuff about wedges yet
 }

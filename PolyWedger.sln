@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolyWedger", "PolyWedger\Po
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGEInterfacerTest", "RGEInterfacerTest\RGEInterfacerTest.csproj", "{28A82568-4433-4EC3-A0F4-ADFBF3A83D69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{0AE8AD36-0340-42BC-8E4C-DEA4DE8263D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{28A82568-4433-4EC3-A0F4-ADFBF3A83D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28A82568-4433-4EC3-A0F4-ADFBF3A83D69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28A82568-4433-4EC3-A0F4-ADFBF3A83D69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AE8AD36-0340-42BC-8E4C-DEA4DE8263D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE8AD36-0340-42BC-8E4C-DEA4DE8263D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE8AD36-0340-42BC-8E4C-DEA4DE8263D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE8AD36-0340-42BC-8E4C-DEA4DE8263D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -11,7 +11,7 @@ public static class Serializer
     private const int HeaderSize = 8 + 4 + 4 + 4; // timestamp (8) + version (4) + wedge count (4) + file type (4)
     private static readonly byte[] FileSignature = Encoding.ASCII.GetBytes("PWDG");
 
-    private static byte[] Serialize(Wedge[] wedges)
+    public static byte[] Serialize(Wedge[] wedges)
     {
         // Size = header size + (number of wedges * byte size of wedge)
         int totalSize = HeaderSize + wedges.Length * WedgeByteSize;
@@ -48,7 +48,7 @@ public static class Serializer
         return ms.ToArray();
     }
     
-    private static Wedge[] Deserialize(byte[] data)
+    public static Wedge[] Deserialize(byte[] data)
     {
         using MemoryStream ms = new MemoryStream(data);
         using BinaryReader br = new BinaryReader(ms, Encoding.ASCII, leaveOpen: true);
@@ -80,7 +80,7 @@ public static class Serializer
         return wedges;
     }
     
-    private static void ReadFile(string path, out byte[] data)
+    public static void ReadFile(string path, out byte[] data)
     {
         try
         {
@@ -94,7 +94,7 @@ public static class Serializer
         }
     }
     
-    private static void WriteToFile(string path, byte[] data)
+    public static void WriteToFile(string path, byte[] data)
     {
         ArgumentNullException.ThrowIfNull(data);
         File.WriteAllBytes(path, data);

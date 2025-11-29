@@ -5,7 +5,7 @@ namespace PolyWedger;
 
 public static class QuaternionUtils
 {
-    private const float Rad2deg = 180f / (float)Math.PI;
+    public const float Rad2deg = 180f / (float)Math.PI;
 
     public static Vector3 GetNormalizedEulerAngles(Vector3 v)
     {
@@ -21,7 +21,7 @@ public static class QuaternionUtils
         return NormalizeEulerDegrees(e);
     }
 
-    private static Quaternion FromToRotation(Vector3 from, Vector3 to)
+    public static Quaternion FromToRotation(Vector3 from, Vector3 to)
     {
         Vector3 f = Vector3.Normalize(from);
         Vector3 t = Vector3.Normalize(to);
@@ -63,7 +63,7 @@ public static class QuaternionUtils
         return q;
     }
 
-    private static Vector3 NormalizeEulerDegrees(Vector3 deg)
+    public static Vector3 NormalizeEulerDegrees(Vector3 deg)
     {
         static float Wrap(float a)
         {
@@ -93,7 +93,7 @@ public static class QuaternionUtils
         return new Vector3(x, y, z);
     }
 
-    private static Vector3 ToEulerAngles(Quaternion q)
+    public static Vector3 ToEulerAngles(Quaternion q)
     {
         // Normalize quaternion first to reduce floating-point drift
         float mag = (float)Math.Sqrt(q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W);
